@@ -1,5 +1,6 @@
 package com.forcelate.controller;
 
+
 import com.forcelate.constant.ExceptionMessage;
 import com.forcelate.dto.AuthenticationDto;
 import com.forcelate.dto.UserInfoDto;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequestMapping("/api")
@@ -49,12 +51,12 @@ public class AuthenticationController {
                                 authenticationDto.getPassword()));
                 Cookie cookie = cookieProvider.createCookie(
                         "jwt",
-                        jwtTokenProvider.generateToken(userInfoDto.getId(),userInfoDto.getEmail()));
+                        jwtTokenProvider.generateToken(userInfoDto.getId(), userInfoDto.getEmail()));
                 response.addCookie(cookie);
-            }else{
+            } else {
                 throw new IncorrectPasswordException(ExceptionMessage.INCORRECT_PASSWORD);
             }
-        }else{
+        } else {
             throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND_BY_EMAIL + userInfoDto.getEmail());
         }
     }
