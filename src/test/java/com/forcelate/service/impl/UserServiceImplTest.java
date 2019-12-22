@@ -4,7 +4,6 @@ import com.forcelate.dto.UserRegistrationDto;
 import com.forcelate.exception.InvalidEmailException;
 import com.forcelate.exception.InvalidPasswordException;
 import com.forcelate.exception.UserAlreadyExistException;
-import com.forcelate.repository.UserRepository;
 import com.forcelate.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +20,6 @@ public class UserServiceImplTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
 
     @Test
     public void registrationFailedByInvalidEmail() {
@@ -61,7 +56,7 @@ public class UserServiceImplTest {
                 .age(23)
                 .password("1111a")
                 .build();
-        if(userRepository.findUserByEmail(userRegistrationDto.getEmail())==null) {
+        if (userService.findUserByEmail(userRegistrationDto.getEmail()) == null) {
             userService.registration(userRegistrationDto);
         }
         Throwable thrown = catchThrowable(() -> userService.registration(userRegistrationDto));

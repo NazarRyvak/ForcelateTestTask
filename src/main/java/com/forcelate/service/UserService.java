@@ -12,6 +12,10 @@ public interface UserService {
 
     void registration(UserRegistrationDto userRegistrationDto);
 
+    UserInfoDto findUserByEmail(String email);
+
+    boolean checkPasswordMatches (int id, String password);
+
     List<UserInfoDto> findUsersWithAgeMoreThan(int age);
 
     List<UserWithArticleDto> findUsersWithArticleByArticleColor(String color);

@@ -69,6 +69,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInfoDto findUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        return user != null ? userInfoMapper.convertToDto(user) : null;
+    }
+
+    @Override
+    public boolean checkPasswordMatches(int id, String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = userRepository.getOne(id);
+        return encoder.matches(password, user.getPassword());
+    }
+
+    @Override
     public List<UserInfoDto> findUsersWithAgeMoreThan(int age) {
         return userInfoMapper.convertToListDto(userRepository.findUsersByAgeGreaterThan(age));
     }

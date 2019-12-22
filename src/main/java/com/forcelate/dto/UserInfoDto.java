@@ -14,6 +14,8 @@ public class UserInfoDto {
 
     private String name;
 
+    private String email;
+
     private int age;
 
     private List<ArticleInfoDto> articles;
