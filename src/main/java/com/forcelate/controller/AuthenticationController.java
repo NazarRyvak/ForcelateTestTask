@@ -4,6 +4,7 @@ package com.forcelate.controller;
 import com.forcelate.constant.ExceptionMessage;
 import com.forcelate.dto.AuthenticationDto;
 import com.forcelate.dto.UserInfoDto;
+import com.forcelate.entity.User;
 import com.forcelate.exception.IncorrectPasswordException;
 import com.forcelate.exception.NotFoundException;
 import com.forcelate.security.CookieProvider;
@@ -12,6 +13,8 @@ import com.forcelate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,21 +46,21 @@ public class AuthenticationController {
 
     @PostMapping("/sign-in")
     public void login(@RequestBody AuthenticationDto authenticationDto, HttpServletResponse response) {
-        UserInfoDto userInfoDto = userService.findUserByEmail(authenticationDto.getEmail());
-        if (userInfoDto != null) {
-            if (userService.checkPasswordMatches(userInfoDto.getId(), authenticationDto.getPassword())) {
+        User user = userService.findUserByEmail(authenticationDto.getEmail());
+        if (user != null) {
+            if (userService.checkPasswordMatches(user.getId(), authenticationDto.getPassword())) {
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(),
                                 authenticationDto.getPassword()));
                 Cookie cookie = cookieProvider.createCookie(
                         "jwt",
-                        jwtTokenProvider.generateToken(userInfoDto.getId(), userInfoDto.getEmail()));
+                        jwtTokenProvider.generateToken(user.getId(), user.getEmail()));
                 response.addCookie(cookie);
             } else {
                 throw new IncorrectPasswordException(ExceptionMessage.INCORRECT_PASSWORD);
             }
         } else {
-            throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND_BY_EMAIL + userInfoDto.getEmail());
+            throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND_BY_EMAIL + user.getEmail());
         }
     }
 }

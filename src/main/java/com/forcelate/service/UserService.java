@@ -12,7 +12,7 @@ public interface UserService {
 
     void registration(UserRegistrationDto userRegistrationDto);
 
-    UserInfoDto findUserByEmail(String email);
+    User findUserByEmail(String email);
 
     boolean checkPasswordMatches (int id, String password);
 

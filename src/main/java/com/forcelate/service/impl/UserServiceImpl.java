@@ -15,9 +15,12 @@ import com.forcelate.mapper.UserRegistrationMapper;
 import com.forcelate.mapper.UserWithArticleMapper;
 import com.forcelate.repository.ArticleRepository;
 import com.forcelate.repository.UserRepository;
+import com.forcelate.security.JWTUser;
 import com.forcelate.service.UserService;
 import com.forcelate.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,9 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDto findUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-        return user != null ? userInfoMapper.convertToDto(user) : null;
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
@@ -108,7 +110,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        return userRepository.getOne(38);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        JWTUser jwtUser = (JWTUser) authentication.getPrincipal();
+        return jwtUser.getUser();
     }
 
 }
