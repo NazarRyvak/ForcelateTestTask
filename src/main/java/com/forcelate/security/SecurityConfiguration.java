@@ -37,11 +37,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+               /* .and()
                 .authorizeRequests()
                 .antMatchers("/api/sign-in").anonymous()
-                .antMatchers("/api/**").authenticated()
-                .anyRequest().authenticated()
+                .antMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()*/
                 .and()
                 .addFilterBefore(new JWTTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
