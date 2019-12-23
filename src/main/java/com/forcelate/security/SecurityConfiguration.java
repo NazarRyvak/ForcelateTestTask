@@ -33,16 +33,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors()
-                .and()
-                .httpBasic().disable()
+                .addFilterBefore(new JWTTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               /* .and()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/api/sign-in").anonymous()
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()*/
-                .and()
-                .addFilterBefore(new JWTTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                //.anyRequest().authenticated()//чомусь не працює
+        ;
     }
 }
