@@ -21,6 +21,7 @@ public class UserInfoMapper {
     public User convertToEntity(UserInfoDto dto) {
         return User.builder()
                 .id(dto.getId())
+                .email(dto.getEmail())
                 .name(dto.getName())
                 .age(dto.getAge())
                 .articles(articleInfoDtoToArticleMapper.convertToListEntity(dto.getArticles()))
@@ -30,6 +31,7 @@ public class UserInfoMapper {
     public UserInfoDto convertToDto(User entity) {
         return UserInfoDto.builder()
                 .id(entity.getId())
+                .email(entity.getEmail())
                 .name(entity.getName())
                 .age(entity.getAge())
                 .articles(articleInfoDtoToArticleMapper.convertToListDto(entity.getArticles()))
