@@ -38,7 +38,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/sign-in").anonymous()
-                //.anyRequest().authenticated()//чомусь не працює
-        ;
+                .antMatchers("/api/***").authenticated();
     }
 }
