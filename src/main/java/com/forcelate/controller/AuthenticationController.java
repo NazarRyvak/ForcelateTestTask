@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,23 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
 
-    private AuthenticationManager authenticationManager;
     private JWTTokenProvider jwtTokenProvider;
     private UserService userService;
     private CookieProvider cookieProvider;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager,
-                                    JWTTokenProvider jwtTokenProvider,
+    public AuthenticationController(JWTTokenProvider jwtTokenProvider,
                                     UserService userService,
                                     CookieProvider cookieProvider) {
-        this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
         this.cookieProvider = cookieProvider;
@@ -49,9 +50,6 @@ public class AuthenticationController {
         User user = userService.findUserByEmail(authenticationDto.getEmail());
         if (user != null) {
             if (userService.checkPasswordMatches(user.getId(), authenticationDto.getPassword())) {
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(),
-                                authenticationDto.getPassword()));
                 Cookie cookie = cookieProvider.createCookie(
                         "jwt",
                         jwtTokenProvider.generateToken(user.getId(), user.getEmail()));
